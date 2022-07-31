@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol KeyboardViewControllerDelegate: AnyObject {
+    func keyboardViewController(withVC vc: KeyboardViewController, didTapKey letter: Character)
+}
+
 class KeyboardViewController: UIViewController {
+    
+    weak var delegate: KeyboardViewControllerDelegate?
     
     let letters = ["qwertyuiop", "asdfghjkl", "zxcvbnm"]
     private var keys: [[Character]] = []
@@ -21,10 +27,12 @@ class KeyboardViewController: UIViewController {
         
         return collectionView
     }()
+    
     //MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        view.backgroundColor = .systemGray3
         self.view.addSubview(collectionView)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -39,22 +47,13 @@ class KeyboardViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 44),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-
-    /*
-    // MARK: - Navigation
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }
 
 extension KeyboardViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -62,6 +61,7 @@ extension KeyboardViewController: UICollectionViewDelegate, UICollectionViewData
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return keys.count
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return keys[section].count
     }
@@ -75,7 +75,10 @@ extension KeyboardViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
         
+        let letter = keys[indexPath.section][indexPath.row]
+        delegate?.keyboardViewController(withVC: self, didTapKey: letter)
     }
 }
 
@@ -92,7 +95,7 @@ extension KeyboardViewController: UICollectionViewDelegateFlowLayout {
         left = inset
         right = inset
         
-        return UIEdgeInsets(top: 2, left: left, bottom: 2, right: right)
+        return UIEdgeInsets(top: 10, left: left, bottom: 0, right: right)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -13,7 +13,7 @@ class KeyboardCollectionViewCell: UICollectionViewCell {
     lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .label
+        label.textColor = .white
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .medium)
         
@@ -23,7 +23,7 @@ class KeyboardCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .systemGray5
+        backgroundColor = UIColor(red: 109/255, green: 92/255, blue: 231/255, alpha: 1)
         contentView.addSubview(label)
     }
     
